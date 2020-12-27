@@ -4,7 +4,6 @@ namespace Drupal\section_library\Entity;
 
 use Drupal\Core\Entity\ContentEntityInterface;
 use Drupal\Core\Entity\EntityChangedInterface;
-use Drupal\Core\Entity\EntityPublishedInterface;
 use Drupal\user\EntityOwnerInterface;
 
 /**
@@ -12,30 +11,11 @@ use Drupal\user\EntityOwnerInterface;
  *
  * @ingroup section_library
  */
-interface SectionLibraryEntityInterface extends ContentEntityInterface, EntityChangedInterface, EntityPublishedInterface, EntityOwnerInterface {
+interface SectionLibraryEntityInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
    * Add get/set methods for your configuration properties here.
    */
-
-  /**
-   * Gets the Section library entity name.
-   *
-   * @return string
-   *   Name of the Section library entity.
-   */
-  public function getName();
-
-  /**
-   * Sets the Section library entity name.
-   *
-   * @param string $name
-   *   The Section library entity name.
-   *
-   * @return \Drupal\section_library\Entity\SectionLibraryEntityInterface
-   *   The called Section library entity entity.
-   */
-  public function setName($name);
 
   /**
    * Gets the Section library entity creation timestamp.

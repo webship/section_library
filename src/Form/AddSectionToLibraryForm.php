@@ -11,6 +11,7 @@ use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\section_library\Entity\SectionLibraryEntity;
+use Drupal\file\Entity\File;
 
 /**
  * Provides a form for configuring a layout section.
@@ -86,6 +87,17 @@ class AddSectionToLibraryForm extends FormBase {
       '#required' => TRUE,
     ];
 
+    $form['image'] = [
+      '#type' => 'managed_file',
+      '#title' => t('Image'),
+      '#description' => t("Upload the section image or screenshot. <br />Allowed extensions: gif png jpg jpeg."),
+      '#required' => FALSE,
+      '#multiple' => FALSE,
+      '#upload_validators' => [
+        'file_validate_extensions' => ['gif png jpg jpeg'],
+      ],
+    ];
+
     $form['actions']['submit'] = [
       '#type' => 'submit',
       '#value' => $this->t('Add section'),
@@ -117,17 +129,28 @@ class AddSectionToLibraryForm extends FormBase {
     // Duplicate feature.
     // $test = clone $this->sectionStorage->getSection($this->delta);
     // $this->sectionStorage->appendSection($test);
-    // kint($test);die;
+    // kint($form_state->getValue('image'));die;
     // Save Entity.
     $current_section = $this->sectionStorage->getSection($this->delta);
 
-    $section = SectionLibraryEntity::create([
-      'name' => $form_state->getValue('label'),
+    $entity_values = [
+      'label' => $form_state->getValue('label'),
       'layout_section' => $current_section,
-    ]);
+    ];
+
+    $fid = $form_state->getValue(['image', 0]);
+
+    if (!empty($fid)) {
+      $file = File::load($fid);
+      $file->setPermanent();
+      $file->save();
+
+      $entity_values['image'] = $fid;
+    }
+
+    $section = SectionLibraryEntity::create($entity_values);
     $section->save();
 
-    // kint($section);die;
     $this->layoutTempstoreRepository->set($this->sectionStorage);
     $form_state->setRedirectUrl($this->sectionStorage->getLayoutBuilderUrl());
   }

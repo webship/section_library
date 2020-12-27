@@ -23,11 +23,6 @@ class SectionLibraryEntityAccessControlHandler extends EntityAccessControlHandle
     switch ($operation) {
 
       case 'view':
-
-        if (!$entity->isPublished()) {
-          return AccessResult::allowedIfHasPermission($account, 'view unpublished section library entity entities');
-        }
-
         return AccessResult::allowedIfHasPermission($account, 'view published section library entity entities');
 
       case 'update':

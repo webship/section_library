@@ -6,7 +6,6 @@ use Drupal\Core\Entity\EntityStorageInterface;
 use Drupal\Core\Field\BaseFieldDefinition;
 use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
-use Drupal\Core\Entity\EntityPublishedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
 
@@ -22,27 +21,39 @@ use Drupal\user\UserInterface;
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
  *     "list_builder" = "Drupal\section_library\SectionLibraryEntityListBuilder",
  *     "views_data" = "Drupal\section_library\Entity\SectionLibraryEntityViewsData",
- *
  *     "access" = "Drupal\section_library\SectionLibraryEntityAccessControlHandler",
+ *     "form" = {
+ *       "default" = "Drupal\section_library\Form\SectionLibraryForm",
+ *       "add" = "Drupal\section_library\Form\SectionLibraryForm",
+ *       "edit" = "Drupal\section_library\Form\SectionLibraryForm",
+ *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm"
+ *     },
+ *     "route_provider" = {
+ *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider"
+ *     },
  *   },
  *   base_table = "section_library_entity",
  *   translatable = FALSE,
  *   admin_permission = "administer section library entity entities",
  *   entity_keys = {
  *     "id" = "id",
- *     "label" = "name",
+ *     "label" = "label",
  *     "uuid" = "uuid",
  *     "uid" = "user_id",
  *     "langcode" = "langcode",
- *     "published" = "status",
  *     "layout_section" = "layout_section"
  *   },
+ *   links = {
+ *     "canonical" = "/admin/content/section-library/{section_library_entity}",
+ *     "collection" = "/admin/content/section-library",
+ *     "add-form" = "/admin/content/section-library/add",
+ *     "edit-form" = "/admin/content/section-library/{section_library_entity}/edit",
+ *     "delete-form" = "/admin/content/section-library/{section_library_entity}/delete"
+ *   }
  * )
  */
 class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEntityInterface {
-
   use EntityChangedTrait;
-  use EntityPublishedTrait;
 
   /**
    * {@inheritdoc}
@@ -52,21 +63,6 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
     $values += [
       'user_id' => \Drupal::currentUser()->id(),
     ];
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function getName() {
-    return $this->get('name')->value;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function setName($name) {
-    $this->set('name', $name);
-    return $this;
   }
 
   /**
@@ -120,9 +116,6 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
   public static function baseFieldDefinitions(EntityTypeInterface $entity_type) {
     $fields = parent::baseFieldDefinitions($entity_type);
 
-    // Add the published field.
-    $fields += static::publishedBaseFieldDefinitions($entity_type);
-
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
       ->setDescription(t('The user ID of author of the Section library entity entity.'))
@@ -147,9 +140,9 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
 
-    $fields['name'] = BaseFieldDefinition::create('string')
-      ->setLabel(t('Name'))
-      ->setDescription(t('The name of the Section library entity entity.'))
+    $fields['label'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Label'))
+      ->setDescription(t('The label of the Section library entity.'))
       ->setSettings([
         'max_length' => 50,
         'text_processing' => 0,
@@ -168,12 +161,6 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
 
-    $fields['status']->setDescription(t('A boolean indicating whether the Section library entity is published.'))
-      ->setDisplayOptions('form', [
-        'type' => 'boolean_checkbox',
-        'weight' => -3,
-      ]);
-
     $fields['created'] = BaseFieldDefinition::create('created')
       ->setLabel(t('Created'))
       ->setDescription(t('The time that the entity was created.'));
@@ -186,6 +173,26 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
     $fields['layout_section'] = BaseFieldDefinition::create('layout_section')
       ->setLabel(t('Sections'))
       ->setDescription(t('The sections storage.'));
+
+    $fields['image'] = BaseFieldDefinition::create('file')
+      ->setLabel(t('Image'))
+      ->setDescription(t('The section image.'))
+      ->setSettings([
+        'uri_scheme' => 'public',
+        'file_directory' => 'credentialing_providers',
+        'file_extensions' => 'gif png jpg jpeg',
+      ])
+      ->setDisplayOptions('view', [
+        'label' => 'hidden',
+        'type' => 'file',
+        'weight' => -3,
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'file',
+        'weight' => -1,
+      ])
+      ->setDisplayConfigurable('form', TRUE)
+      ->setDisplayConfigurable('view', TRUE);
 
     return $fields;
   }
