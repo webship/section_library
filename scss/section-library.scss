@@ -1,0 +1,44 @@
+.section-library-filter {
+  box-sizing: border-box;
+}
+.section-library-links {
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  li {
+    display: flex;
+    padding: 0 0.5rem 1rem 0.5rem;
+    width: 50%;
+    a {
+      background-color: rgba(0,0,0,0.2);
+      padding: 1.5rem;
+      &:hover {
+        background-color: rgba(0,0,0,0.5);
+        text-decoration: none;
+      }
+    }
+  }
+}
+.section-library-link-img {
+  max-width: 100%;
+  margin: 0 auto;
+  display: block;
+}
+.section-library-link-label {
+  padding-top: 1rem;
+  display: block;
+  text-align: center;
+}
+
+/* If #layout_builder_modal enabled */
+#layout-builder-modal {
+  .section-library-filter.form-search {
+    box-sizing: border-box;
+  }
+  .section-library-links {
+    // Show 3 cards per row.
+    li {
+      width: 33%;
+    }
+  }
+}
