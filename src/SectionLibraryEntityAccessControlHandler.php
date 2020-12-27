@@ -28,7 +28,6 @@ class SectionLibraryEntityAccessControlHandler extends EntityAccessControlHandle
           return AccessResult::allowedIfHasPermission($account, 'view unpublished section library entity entities');
         }
 
-
         return AccessResult::allowedIfHasPermission($account, 'view published section library entity entities');
 
       case 'update':
@@ -50,6 +49,5 @@ class SectionLibraryEntityAccessControlHandler extends EntityAccessControlHandle
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
     return AccessResult::allowedIfHasPermission($account, 'add section library entity entities');
   }
-
 
 }

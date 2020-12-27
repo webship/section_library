@@ -4,6 +4,7 @@
  * @file
  * Section Library module file.
  */
+
 use Drupal\Core\Url;
 use Drupal\Component\Serialization\Json;
 
@@ -29,7 +30,7 @@ function _section_library_layout_builder_pre_render($element) {
         continue;
       }
 
-      // New sections
+      // New sections.
       if (isset($section['link']) && isset($section['link']['#url'])) {
         $params = $section['link']['#url']->getRouteParameters();
         $url_options = [

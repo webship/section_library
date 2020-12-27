@@ -106,7 +106,7 @@ class AddSectionToLibraryForm extends FormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    
+
   }
 
   /**
@@ -114,14 +114,11 @@ class AddSectionToLibraryForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     // $this->sectionStorage->getSection($this->delta)->toArray()
-
     // Duplicate feature.
     // $test = clone $this->sectionStorage->getSection($this->delta);
     // $this->sectionStorage->appendSection($test);
     // kint($test);die;
-
-
-    // Save Entity
+    // Save Entity.
     $current_section = $this->sectionStorage->getSection($this->delta);
 
     $section = SectionLibraryEntity::create([
@@ -131,7 +128,6 @@ class AddSectionToLibraryForm extends FormBase {
     $section->save();
 
     // kint($section);die;
-
     $this->layoutTempstoreRepository->set($this->sectionStorage);
     $form_state->setRedirectUrl($this->sectionStorage->getLayoutBuilderUrl());
   }

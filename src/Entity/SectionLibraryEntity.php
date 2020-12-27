@@ -182,7 +182,7 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
       ->setLabel(t('Changed'))
       ->setDescription(t('The time that the entity was last edited.'));
 
-    // layout section
+    // Layout section.
     $fields['layout_section'] = BaseFieldDefinition::create('layout_section')
       ->setLabel(t('Sections'))
       ->setDescription(t('The sections storage.'));
