@@ -1,0 +1,20 @@
+add section library entity entities:
+  title: 'Create new Section library entity entities'
+
+administer section library entity entities:
+  title: 'Administer Section library entity entities'
+  description: 'Allow to access the administration form to configure Section library entity entities.'
+  restrict access: true
+
+delete section library entity entities:
+  title: 'Delete Section library entity entities'
+
+edit section library entity entities:
+  title: 'Edit Section library entity entities'
+
+view published section library entity entities:
+  title: 'View published Section library entity entities'
+
+view unpublished section library entity entities:
+  title: 'View unpublished Section library entity entities'
+
