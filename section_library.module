@@ -79,6 +79,8 @@ function _section_library_layout_builder_pre_render($element) {
       // Configure section.
       elseif (isset($section['configure']) && isset($section['configure']['#url'])) {
         $params = $section['configure']['#url']->getRouteParameters();
+        // Pop the last item to add the link before it.
+        $last_item_section = array_pop($sections[$key]);
         $sections[$key]['add_to_library'] = [
           '#type' => 'link',
           '#title' => t('Add to Library'),
@@ -102,6 +104,8 @@ function _section_library_layout_builder_pre_render($element) {
             ]
           ),
         ];
+        // Push the last item again.
+        array_push($sections[$key], $last_item_section);
       }
     }
 

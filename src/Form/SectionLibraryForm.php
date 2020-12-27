@@ -22,7 +22,7 @@ class SectionLibraryForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    // kint($form_state->getValue('image'));die;
+    // kint($form_state->getValue('image'));die;.
     $status = $this->entity->save();
     $label = $this->entity->label();
 
