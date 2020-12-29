@@ -1,19 +1,16 @@
-add section library entity entities:
-  title: 'Create new Section library entity entities'
-
-administer section library entity entities:
-  title: 'Administer Section library entity entities'
-  description: 'Allow to access the administration form to configure Section library entity entities.'
+administer Section library templates:
+  title: 'Administer Section library templates'
+  description: 'Allow to access the administration form to configure Section library templates.'
   restrict access: true
 
-delete section library entity entities:
-  title: 'Delete Section library entity entities'
+view Section library templates:
+  title: 'View Section library templates'
 
-edit section library entity entities:
-  title: 'Edit Section library entity entities'
+add Section library templates:
+  title: 'Create new Section library templates'
 
-view published section library entity entities:
-  title: 'View published Section library entity entities'
+edit Section library templates:
+  title: 'Edit Section library templates'
 
-view unpublished section library entity entities:
-  title: 'View unpublished Section library entity entities'
+delete Section library templates:
+  title: 'Delete Section library templates'

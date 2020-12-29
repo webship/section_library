@@ -11,7 +11,7 @@ use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\section_library\Entity\SectionLibraryEntity;
+use Drupal\section_library\Entity\SectionLibraryTemplate;
 use Drupal\Core\Render\Markup;
 use Drupal\file\Entity\File;
 
@@ -97,7 +97,7 @@ class ChooseSectionFromLibraryController implements ContainerInjectionInterface 
    *   The section links render array.
    */
   protected function getSectionLinks(SectionStorageInterface $section_storage, $delta) {
-    $sections = SectionLibraryEntity::loadMultiple();
+    $sections = SectionLibraryTemplate::loadMultiple();
     $links = [];
     foreach ($sections as $section_id => $section) {
       $attributes = $this->getAjaxAttributes();

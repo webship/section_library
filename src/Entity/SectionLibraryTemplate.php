@@ -10,21 +10,20 @@ use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
 
 /**
- * Defines the Section library entity entity.
+ * Defines the Section library template entity.
  *
  * @ingroup section_library
  *
  * @ContentEntityType(
- *   id = "section_library_entity",
- *   label = @Translation("Section library entity"),
+ *   id = "section_library_template",
+ *   label = @Translation("Section library template"),
  *   handlers = {
  *     "view_builder" = "Drupal\Core\Entity\EntityViewBuilder",
- *     "list_builder" = "Drupal\section_library\SectionLibraryEntityListBuilder",
- *     "views_data" = "Drupal\section_library\Entity\SectionLibraryEntityViewsData",
- *     "access" = "Drupal\section_library\SectionLibraryEntityAccessControlHandler",
+ *     "list_builder" = "Drupal\section_library\SectionLibraryTemplateListBuilder",
+ *     "views_data" = "Drupal\section_library\Entity\SectionLibraryTemplateViewsData",
+ *     "access" = "Drupal\section_library\SectionLibraryTemplateAccessControlHandler",
  *     "form" = {
  *       "default" = "Drupal\section_library\Form\SectionLibraryForm",
- *       "add" = "Drupal\section_library\Form\SectionLibraryForm",
  *       "edit" = "Drupal\section_library\Form\SectionLibraryForm",
  *       "delete" = "Drupal\Core\Entity\ContentEntityDeleteForm"
  *     },
@@ -32,9 +31,9 @@ use Drupal\user\UserInterface;
  *       "html" = "Drupal\Core\Entity\Routing\AdminHtmlRouteProvider"
  *     },
  *   },
- *   base_table = "section_library_entity",
+ *   base_table = "section_library_template",
  *   translatable = FALSE,
- *   admin_permission = "administer section library entity entities",
+ *   admin_permission = "administer Section library template entities",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
@@ -44,15 +43,14 @@ use Drupal\user\UserInterface;
  *     "layout_section" = "layout_section"
  *   },
  *   links = {
- *     "canonical" = "/admin/content/section-library/{section_library_entity}",
+ *     "canonical" = "/admin/content/section-library/{section_library_template}",
  *     "collection" = "/admin/content/section-library",
- *     "add-form" = "/admin/content/section-library/add",
- *     "edit-form" = "/admin/content/section-library/{section_library_entity}/edit",
- *     "delete-form" = "/admin/content/section-library/{section_library_entity}/delete"
+ *     "edit-form" = "/admin/content/section-library/{section_library_template}/edit",
+ *     "delete-form" = "/admin/content/section-library/{section_library_template}/delete"
  *   }
  * )
  */
-class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEntityInterface {
+class SectionLibraryTemplate extends ContentEntityBase implements SectionLibraryTemplateInterface {
   use EntityChangedTrait;
 
   /**
@@ -118,7 +116,7 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
 
     $fields['user_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Authored by'))
-      ->setDescription(t('The user ID of author of the Section library entity entity.'))
+      ->setDescription(t('The user ID of author of the Section library template entity.'))
       ->setRevisionable(TRUE)
       ->setSetting('target_type', 'user')
       ->setSetting('handler', 'default')
@@ -142,7 +140,7 @@ class SectionLibraryEntity extends ContentEntityBase implements SectionLibraryEn
 
     $fields['label'] = BaseFieldDefinition::create('string')
       ->setLabel(t('Label'))
-      ->setDescription(t('The label of the Section library entity.'))
+      ->setDescription(t('The label of the Section library template.'))
       ->setSettings([
         'max_length' => 50,
         'text_processing' => 0,

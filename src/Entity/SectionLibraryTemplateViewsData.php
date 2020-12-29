@@ -7,7 +7,7 @@ use Drupal\views\EntityViewsData;
 /**
  * Provides Views data for Section library entity entities.
  */
-class SectionLibraryEntityViewsData extends EntityViewsData {
+class SectionLibraryTemplateViewsData extends EntityViewsData {
 
   /**
    * {@inheritdoc}

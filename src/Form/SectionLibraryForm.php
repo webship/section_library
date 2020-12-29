@@ -22,8 +22,8 @@ class SectionLibraryForm extends ContentEntityForm {
    * {@inheritdoc}
    */
   public function save(array $form, FormStateInterface $form_state) {
-    // kint($form_state->getValue('image'));die;.
     $status = $this->entity->save();
+    // kint($status);die;
     $label = $this->entity->label();
 
     switch ($status) {
@@ -39,8 +39,7 @@ class SectionLibraryForm extends ContentEntityForm {
         ]));
     }
 
-    // kint($this->entity->get('image')->getValue());die;
-    // $form_state->setRedirect('entity.consumer.collection');
+    $form_state->setRedirect('entity.section_library_template.collection');
   }
 
 }

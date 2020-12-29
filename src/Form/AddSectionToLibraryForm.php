@@ -10,7 +10,7 @@ use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\section_library\Entity\SectionLibraryEntity;
+use Drupal\section_library\Entity\SectionLibraryTemplate;
 use Drupal\file\Entity\File;
 
 /**
@@ -148,7 +148,7 @@ class AddSectionToLibraryForm extends FormBase {
       $entity_values['image'] = $fid;
     }
 
-    $section = SectionLibraryEntity::create($entity_values);
+    $section = SectionLibraryTemplate::create($entity_values);
     $section->save();
 
     $this->layoutTempstoreRepository->set($this->sectionStorage);

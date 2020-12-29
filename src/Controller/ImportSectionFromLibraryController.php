@@ -6,7 +6,7 @@ use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Drupal\section_library\Entity\SectionLibraryEntity;
+use Drupal\section_library\Entity\SectionLibraryTemplate;
 use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
@@ -60,8 +60,8 @@ class ImportSectionFromLibraryController implements ContainerInjectionInterface 
    *   A render array.
    */
   public function build($section_library_id, SectionStorageInterface $section_storage, $delta) {
-    $section_library_entity = SectionLibraryEntity::load($section_library_id);
-    $section = $section_library_entity->get('layout_section')->getValue();
+    $section_library_template = SectionLibraryTemplate::load($section_library_id);
+    $section = $section_library_template->get('layout_section')->getValue();
 
     $section_storage->insertSection($delta, $section[0]['section']);
 
