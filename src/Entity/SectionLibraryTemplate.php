@@ -160,15 +160,30 @@ class SectionLibraryTemplate extends ContentEntityBase implements SectionLibrary
       ->setDisplayConfigurable('view', TRUE)
       ->setRequired(TRUE);
 
-    $fields['created'] = BaseFieldDefinition::create('created')
-      ->setLabel(t('Created'))
-      ->setDescription(t('The time that the entity was created.'));
+    $fields['type'] = BaseFieldDefinition::create('list_string')
+      ->setLabel(t('Type'))
+      ->setSettings([
+        'allowed_values' => [
+          'section' => 'Section',
+          'template' => 'Template',
+        ],
+      ])
+      ->setDisplayOptions('form', [
+        'type' => 'options_select',
+      ]);
+    
+    $fields['entity_id'] = BaseFieldDefinition::create('entity_reference')
+      ->setLabel(t('Entity ID'))
+      ->setDescription(t('The ID of the entity of which this template added from it.'))
+      ->setRequired(TRUE);
 
-    $fields['changed'] = BaseFieldDefinition::create('changed')
-      ->setLabel(t('Changed'))
-      ->setDescription(t('The time that the entity was last edited.'));
+    $fields['entity_type'] = BaseFieldDefinition::create('string')
+      ->setLabel(t('Entity type'))
+      ->setRequired(TRUE)
+      ->setDescription(t('The entity type to which this template added from it.'))
+      ->setSetting('is_ascii', TRUE)
+      ->setSetting('max_length', EntityTypeInterface::ID_MAX_LENGTH);
 
-    // Layout section.
     $fields['layout_section'] = BaseFieldDefinition::create('layout_section')
       ->setLabel(t('Sections'))
       ->setDescription(t('The sections storage.'))
@@ -193,6 +208,14 @@ class SectionLibraryTemplate extends ContentEntityBase implements SectionLibrary
       ])
       ->setDisplayConfigurable('form', TRUE)
       ->setDisplayConfigurable('view', TRUE);
+
+    $fields['created'] = BaseFieldDefinition::create('created')
+      ->setLabel(t('Created'))
+      ->setDescription(t('The time that the entity was created.'));
+
+    $fields['changed'] = BaseFieldDefinition::create('changed')
+      ->setLabel(t('Changed'))
+      ->setDescription(t('The time that the entity was last edited.'));
 
     return $fields;
   }

@@ -125,17 +125,15 @@ class AddSectionToLibraryForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // $this->sectionStorage->getSection($this->delta)->toArray()
-    // Duplicate feature.
-    // $test = clone $this->sectionStorage->getSection($this->delta);
-    // $this->sectionStorage->appendSection($test);
-    // kint($form_state->getValue('image'));die;
-    // Save Entity.
     $current_section = $this->sectionStorage->getSection($this->delta);
+    $layout_entity = $this->sectionStorage->getContextValue('entity');
 
     $entity_values = [
       'label' => $form_state->getValue('label'),
       'layout_section' => $current_section,
+      'type' => 'section',
+      'entity_type' => $layout_entity->getEntityTypeId(),
+      'entity_id' => $layout_entity->id(),
     ];
 
     $fid = $form_state->getValue(['image', 0]);

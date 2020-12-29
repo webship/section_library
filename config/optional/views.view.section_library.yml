@@ -3,10 +3,13 @@ status: true
 dependencies:
   module:
     - file
+    - options
     - section_library
     - user
+_core:
+  default_config_hash: 2HZA713MNHN-L7nGhBDoFzACQQHZoSxJ5BWHDWkYjo4
 id: section_library
-label: 'Section Library'
+label: 'Layout Builder Library'
 module: views
 description: ''
 tag: ''
@@ -147,7 +150,7 @@ display:
           exclude: false
           alter:
             alter_text: true
-            text: '<img src="{{ image__target_id }}">'
+            text: '<img src="{{ image__target_id }}" width="500" />'
             make_link: false
             path: ''
             absolute: false
@@ -264,6 +267,135 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        type:
+          id: type
+          table: section_library_template
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: Type
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: value
+          type: list_default
+          settings: {  }
+          group_column: value
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: section_library_template
+          entity_field: type
+          plugin_id: field
+        entity_id:
+          id: entity_id
+          table: section_library_template
+          field: entity_id
+          relationship: none
+          group_type: group
+          admin_label: ''
+          label: 'Source content'
+          exclude: false
+          alter:
+            alter_text: false
+            text: ''
+            make_link: false
+            path: ''
+            absolute: false
+            external: false
+            replace_spaces: false
+            path_case: none
+            trim_whitespace: false
+            alt: ''
+            rel: ''
+            link_class: ''
+            prefix: ''
+            suffix: ''
+            target: ''
+            nl2br: false
+            max_length: 0
+            word_boundary: true
+            ellipsis: true
+            more_link: false
+            more_link_text: ''
+            more_link_path: ''
+            strip_tags: false
+            trim: false
+            preserve_tags: ''
+            html: false
+          element_type: ''
+          element_class: ''
+          element_label_type: ''
+          element_label_class: ''
+          element_label_colon: true
+          element_wrapper_type: ''
+          element_wrapper_class: ''
+          element_default_classes: true
+          empty: ''
+          hide_empty: false
+          empty_zero: false
+          hide_alter_empty: true
+          click_sort_column: target_id
+          type: entity_reference_label
+          settings:
+            link: true
+          group_column: target_id
+          group_columns: {  }
+          group_rows: true
+          delta_limit: 0
+          delta_offset: 0
+          delta_reversed: false
+          delta_first_last: false
+          multi_type: separator
+          separator: ', '
+          field_api_classes: false
+          entity_type: section_library_template
+          entity_field: entity_id
+          plugin_id: field
         created:
           id: created
           table: section_library_template
@@ -565,8 +697,76 @@ display:
           entity_type: section_library_template
           entity_field: label
           plugin_id: string
-      sorts: {  }
-      title: 'Section Library'
+        type:
+          id: type
+          table: section_library_template
+          field: type
+          relationship: none
+          group_type: group
+          admin_label: ''
+          operator: '='
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: type_op
+            label: Type
+            description: null
+            use_operator: false
+            operator: type_op
+            operator_limit_selection: false
+            operator_list: {  }
+            identifier: type
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            placeholder: null
+          is_grouped: true
+          group_info:
+            label: Type
+            description: ''
+            identifier: type
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {  }
+            group_items:
+              1:
+                title: Section
+                operator: '='
+                value: section
+              2:
+                title: Template
+                operator: '='
+                value: template
+              3:
+                title: ''
+                operator: '='
+                value: ''
+          entity_type: section_library_template
+          entity_field: type
+          plugin_id: string
+      sorts:
+        created:
+          id: created
+          table: section_library_template
+          field: created
+          relationship: none
+          group_type: group
+          admin_label: ''
+          order: DESC
+          exposed: false
+          expose:
+            label: ''
+          granularity: second
+          entity_type: section_library_template
+          entity_field: created
+          plugin_id: date
+      title: 'Layout Builder Library'
       header: {  }
       footer: {  }
       empty:

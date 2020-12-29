@@ -125,12 +125,15 @@ class AddTemplateToLibraryForm extends FormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    // Save Entity.
     $sections = $this->sectionStorage->getSections();
+    $layout_entity = $this->sectionStorage->getContextValue('entity');
 
     $entity_values = [
       'label' => $form_state->getValue('label'),
       'layout_section' => $sections,
+      'type' => 'template',
+      'entity_type' => $layout_entity->getEntityTypeId(),
+      'entity_id' => $layout_entity->id(),
     ];
 
     $fid = $form_state->getValue(['image', 0]);
