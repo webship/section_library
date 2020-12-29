@@ -44,3 +44,18 @@
 #layout-builder-modal .section-library-links li {
   width: 33%;
 }
+
+/* links */
+.layout-builder__link--add-section-to-library,
+.layout-builder__link--import-from-library {
+  margin-left: 1rem;
+}
+
+.layout-builder__link--add-template-to-library {
+  display: block;
+  text-align: center;
+  padding: 1rem;
+  border: 1px solid #eee;
+  margin: 1rem 0;
+  background: #eee;
+}

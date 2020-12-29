@@ -39,6 +39,7 @@ function _section_library_layout_builder_pre_render($element) {
               'use-ajax',
               'layout-builder__link',
               'layout-builder__link--add',
+              'layout-builder__link--import-from-library',
             ],
             'data-dialog-type' => 'dialog',
             'data-dialog-renderer' => 'off_canvas',
@@ -62,11 +63,11 @@ function _section_library_layout_builder_pre_render($element) {
           unset($url_options['attributes']['data-dialog-renderer']);
         }
 
-        $sections[$key]['choose_section_from_library'] = [
+        $sections[$key]['choose_template_from_library'] = [
           '#type' => 'link',
-          '#title' => t('Import section from Library'),
+          '#title' => t('Import from Library'),
           '#url' => Url::fromRoute(
-            'section_library.choose_section_from_library',
+            'section_library.choose_template_from_library',
             [
               'section_storage_type' => $params['section_storage_type'],
               'section_storage' => $params['section_storage'],
@@ -97,6 +98,7 @@ function _section_library_layout_builder_pre_render($element) {
                   'use-ajax',
                   'layout-builder__link',
                   'layout-builder__link--add',
+                  'layout-builder__link--add-section-to-library',
                 ],
                 'data-dialog-type' => 'dialog',
                 'data-dialog-renderer' => 'off_canvas',
@@ -125,7 +127,7 @@ function _section_library_layout_builder_pre_render($element) {
               'class' => [
                 'use-ajax',
                 'layout-builder__link',
-                'layout-builder__link--add',
+                'layout-builder__link--add-template-to-library',
               ],
               'data-dialog-type' => 'dialog',
               'data-dialog-renderer' => 'off_canvas',

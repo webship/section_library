@@ -24,8 +24,8 @@ section_library.add_template_to_library:
       section_storage:
         layout_builder_tempstore: TRUE
 
-section_library.choose_section_from_library:
-  path: '/section_library/choose/section/{section_storage_type}/{section_storage}/{delta}'
+section_library.choose_template_from_library:
+  path: '/section_library/choose/template/{section_storage_type}/{section_storage}/{delta}'
   defaults:
     _controller: '\Drupal\section_library\Controller\ChooseSectionFromLibraryController::build'
     _title: 'Choose a section'

@@ -65,7 +65,8 @@ class ImportSectionFromLibraryController implements ContainerInjectionInterface 
     $section_library_template = SectionLibraryTemplate::load($section_library_id);
     $sections = $section_library_template->get('layout_section')->getValue();
     if ($sections) {
-      foreach ($sections as $section) {
+      $reversed_sections = array_reverse($sections);
+      foreach ($reversed_sections as $section) {
         $section_storage->insertSection($delta, $section['section']);
       }
     }
