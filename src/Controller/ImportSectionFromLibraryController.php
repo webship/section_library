@@ -51,6 +51,8 @@ class ImportSectionFromLibraryController implements ContainerInjectionInterface 
   /**
    * Provides the UI for choosing a new block.
    *
+   * @param int $section_library_id
+   *   The entity id.
    * @param \Drupal\layout_builder\SectionStorageInterface $section_storage
    *   The section storage.
    * @param int $delta
@@ -61,9 +63,12 @@ class ImportSectionFromLibraryController implements ContainerInjectionInterface 
    */
   public function build($section_library_id, SectionStorageInterface $section_storage, $delta) {
     $section_library_template = SectionLibraryTemplate::load($section_library_id);
-    $section = $section_library_template->get('layout_section')->getValue();
-
-    $section_storage->insertSection($delta, $section[0]['section']);
+    $sections = $section_library_template->get('layout_section')->getValue();
+    if ($sections) {
+      foreach ($sections as $section) {
+        $section_storage->insertSection($delta, $section['section']);
+      }
+    }
 
     $this->layoutTempstoreRepository->set($section_storage);
 

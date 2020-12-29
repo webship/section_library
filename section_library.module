@@ -109,6 +109,33 @@ function _section_library_layout_builder_pre_render($element) {
       }
     }
 
+    $add_to_template = [
+      'add_template_to_library' => [
+        '#type' => 'link',
+        '#title' => t('Add this template to library'),
+        '#url' => Url::fromRoute(
+          'section_library.add_template_to_library',
+          [
+            'section_storage_type' => $params['section_storage_type'],
+            'section_storage' => $params['section_storage'],
+            'delta' => $params['delta'],
+          ],
+          [
+            'attributes' => [
+              'class' => [
+                'use-ajax',
+                'layout-builder__link',
+                'layout-builder__link--add',
+              ],
+              'data-dialog-type' => 'dialog',
+              'data-dialog-renderer' => 'off_canvas',
+            ],
+          ]
+        ),
+      ],
+    ];
+    array_unshift($sections, $add_to_template);
+
     $element['layout_builder'] = $sections;
 
     $element['#attached']['library'][] = 'section_library/section_library';

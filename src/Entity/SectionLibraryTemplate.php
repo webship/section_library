@@ -8,6 +8,7 @@ use Drupal\Core\Entity\ContentEntityBase;
 use Drupal\Core\Entity\EntityChangedTrait;
 use Drupal\Core\Entity\EntityTypeInterface;
 use Drupal\user\UserInterface;
+use Drupal\Core\Field\FieldStorageDefinitionInterface;
 
 /**
  * Defines the Section library template entity.
@@ -170,7 +171,8 @@ class SectionLibraryTemplate extends ContentEntityBase implements SectionLibrary
     // Layout section.
     $fields['layout_section'] = BaseFieldDefinition::create('layout_section')
       ->setLabel(t('Sections'))
-      ->setDescription(t('The sections storage.'));
+      ->setDescription(t('The sections storage.'))
+      ->setCardinality(FieldStorageDefinitionInterface::CARDINALITY_UNLIMITED);
 
     $fields['image'] = BaseFieldDefinition::create('file')
       ->setLabel(t('Image'))
