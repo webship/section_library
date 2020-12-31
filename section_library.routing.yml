@@ -28,7 +28,7 @@ section_library.choose_template_from_library:
   path: '/section_library/choose/template/{section_storage_type}/{section_storage}/{delta}'
   defaults:
     _controller: '\Drupal\section_library\Controller\ChooseSectionFromLibraryController::build'
-    _title: 'Choose a section'
+    _title: 'Templates library'
   requirements:
     _layout_builder_access: 'view'
   options:
