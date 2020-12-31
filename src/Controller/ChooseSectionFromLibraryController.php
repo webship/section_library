@@ -16,7 +16,7 @@ use Drupal\Core\Render\Markup;
 use Drupal\file\Entity\File;
 
 /**
- * Defines a controller to choose a new block.
+ * Defines a controller to choose a section from library.
  *
  * @internal
  *   Controller classes are internal.

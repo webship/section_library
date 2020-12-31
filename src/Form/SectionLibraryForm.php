@@ -23,7 +23,6 @@ class SectionLibraryForm extends ContentEntityForm {
    */
   public function save(array $form, FormStateInterface $form_state) {
     $status = $this->entity->save();
-    // kint($status);die;
     $label = $this->entity->label();
 
     switch ($status) {
@@ -33,8 +32,14 @@ class SectionLibraryForm extends ContentEntityForm {
         ]));
         break;
 
+      case SAVED_UPDATED:
+        $this->messenger()->addMessage($this->t('%label has been updated.', [
+          '%label' => $label,
+        ]));
+        break;
+
       default:
-        $this->messenger()->addMessage($this->t('%label added to section library.', [
+        $this->messenger()->addMessage($this->t('%label saved to section library.', [
           '%label' => $label,
         ]));
     }

@@ -1,7 +1,7 @@
 {
   "name": "section_library",
-  "description": "Section library.",
-  "author": "Mahmoud Zayed & Aaron Christian",
+  "description": "Create reusable templates for single or multiple sections at the layout builder.",
+  "author": "Mahmoud Zayed",
   "version": "1.0.0",
   "scripts": {
     "css:compile": "node-sass --importer node_modules/node-sass-magic-importer/dist/cli.js scss/ --output-style expanded -o css/",

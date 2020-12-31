@@ -12,9 +12,6 @@ use Drupal\Component\Serialization\Json;
  * Implements hook_element_info_alter().
  */
 function section_library_element_info_alter(array &$types) {
-  // $types['layout_builder']['#pre_render'] = [
-  //   [\Drupal\section_library\Element\LayoutBuilder::class, 'preRenderSectionLibrary'],
-  // ];
   $types['layout_builder']['#pre_render'][] = '_section_library_layout_builder_pre_render';
 }
 
@@ -30,7 +27,7 @@ function _section_library_layout_builder_pre_render($element) {
         continue;
       }
 
-      // New sections.
+      // Add import from library link to the new section.
       if (isset($section['link']) && isset($section['link']['#url'])) {
         $params = $section['link']['#url']->getRouteParameters();
         $url_options = [
@@ -76,7 +73,7 @@ function _section_library_layout_builder_pre_render($element) {
           ),
         ];
       }
-      // Configure section.
+      // Add save to library link to the built section.
       elseif (isset($section['configure']) && isset($section['configure']['#url'])) {
         $params = $section['configure']['#url']->getRouteParameters();
         // Pop the last item to add the link before it.
@@ -138,6 +135,7 @@ function _section_library_layout_builder_pre_render($element) {
 
     $element['layout_builder'] = $sections;
 
+    // Attach the library.
     $element['#attached']['library'][] = 'section_library/section_library';
   }
 

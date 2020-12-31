@@ -1,5 +1,5 @@
 name: 'Section Library'
-description: 'Section library.'
+description: 'Create reusable templates for single or multiple sections at the layout builder.'
 type: module
 core: 8.x
 core_version_requirement: ^8 || ^9

@@ -14,10 +14,6 @@ use Drupal\user\EntityOwnerInterface;
 interface SectionLibraryTemplateInterface extends ContentEntityInterface, EntityChangedInterface, EntityOwnerInterface {
 
   /**
-   * Add get/set methods for your configuration properties here.
-   */
-
-  /**
    * Gets the Section library template creation timestamp.
    *
    * @return int

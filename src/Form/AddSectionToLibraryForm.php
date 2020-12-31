@@ -14,7 +14,7 @@ use Drupal\section_library\Entity\SectionLibraryTemplate;
 use Drupal\file\Entity\File;
 
 /**
- * Provides a form for configuring a layout section.
+ * Provides a form for adding a section to the library.
  *
  * @internal
  *   Form classes are internal.
@@ -47,7 +47,7 @@ class AddSectionToLibraryForm extends FormBase {
   protected $delta;
 
   /**
-   * Constructs a new ConfigureSectionForm.
+   * Constructs a new AddSectionToLibraryForm.
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
@@ -112,13 +112,6 @@ class AddSectionToLibraryForm extends FormBase {
     // Mark this as an administrative page for JavaScript ("Back to site" link).
     $form['#attached']['drupalSettings']['path']['currentPathIsAdmin'] = TRUE;
     return $form;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function validateForm(array &$form, FormStateInterface $form_state) {
-
   }
 
   /**
