@@ -169,9 +169,9 @@ class SectionLibraryTemplate extends ContentEntityBase implements SectionLibrary
         ],
       ])
       ->setDisplayOptions('form', [
-        'type' => 'options_select',
+        'type' => 'hidden',
       ]);
-    
+
     $fields['entity_id'] = BaseFieldDefinition::create('entity_reference')
       ->setLabel(t('Entity ID'))
       ->setDescription(t('The ID of the entity of which this template added from it.'))
