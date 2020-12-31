@@ -38,7 +38,6 @@ function _section_library_layout_builder_pre_render($element) {
             'class' => [
               'use-ajax',
               'layout-builder__link',
-              'layout-builder__link--add',
               'layout-builder__link--import-from-library',
             ],
             'data-dialog-type' => 'dialog',
@@ -97,7 +96,6 @@ function _section_library_layout_builder_pre_render($element) {
                 'class' => [
                   'use-ajax',
                   'layout-builder__link',
-                  'layout-builder__link--add',
                   'layout-builder__link--add-section-to-library',
                 ],
                 'data-dialog-type' => 'dialog',
