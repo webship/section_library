@@ -18,7 +18,7 @@
         var toggleSectionLibraryEntry = function toggleSectionLibraryEntry(index, link) {
           var $link = $(link);
           var textMatch = $link.text().toLowerCase().indexOf(query) !== -1;
-          $link.toggle(textMatch);
+          $link.parent().toggle(textMatch);
         };
 
         if (query.length >= 2) {
@@ -26,7 +26,7 @@
           layoutBuilderSectionLibraryFiltered = true;
         } else if (layoutBuilderSectionLibraryFiltered) {
           layoutBuilderSectionLibraryFiltered = false;
-          $filterLinks.show();
+          $filterLinks.parent().show();
           Drupal.announce(Drupal.t('All available sections are listed.'));
         }
       };
