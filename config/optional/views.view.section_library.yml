@@ -6,8 +6,6 @@ dependencies:
     - options
     - section_library
     - user
-_core:
-  default_config_hash: 2HZA713MNHN-L7nGhBDoFzACQQHZoSxJ5BWHDWkYjo4
 id: section_library
 label: 'Layout Builder Library'
 module: views
