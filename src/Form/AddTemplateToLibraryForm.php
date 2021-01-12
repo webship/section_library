@@ -5,13 +5,16 @@ namespace Drupal\section_library\Form;
 use Drupal\Core\Ajax\AjaxFormHelperTrait;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Drupal\layout_builder\LayoutBuilderHighlightTrait;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\section_library\Entity\SectionLibraryTemplate;
 use Drupal\file\Entity\File;
+use Drupal\section_library\DeepCloningTrait;
+use Drupal\section_library\SectionLibraryRebuildTrait;
+use Drupal\Component\Uuid\UuidInterface;
+use Drupal\Core\Entity\EntityTypeManagerInterface;
 
 /**
  * Provides a form for adding a template to the library.
@@ -23,7 +26,8 @@ class AddTemplateToLibraryForm extends FormBase {
 
   use AjaxFormHelperTrait;
   use LayoutBuilderHighlightTrait;
-  use LayoutRebuildTrait;
+  use DeepCloningTrait;
+  use SectionLibraryRebuildTrait;
 
   /**
    * The layout tempstore repository.
@@ -47,13 +51,33 @@ class AddTemplateToLibraryForm extends FormBase {
   protected $delta;
 
   /**
+   * The UUID generator.
+   *
+   * @var \Drupal\Component\Uuid\UuidInterface
+   */
+  protected $uuidGenerator;
+
+  /**
+   * The entity type manager.
+   *
+   * @var \Drupal\Core\Entity\EntityTypeManagerInterface
+   */
+  protected $entityTypeManager;
+
+  /**
    * Constructs a new AddTemplateToLibraryForm.
    *
    * @param \Drupal\layout_builder\LayoutTempstoreRepositoryInterface $layout_tempstore_repository
    *   The layout tempstore repository.
+   * @param \Drupal\Component\Uuid\UuidInterface $uuid
+   *   The UUID generator.
+   * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
+   *   The entity type manager.
    */
-  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository) {
+  public function __construct(LayoutTempstoreRepositoryInterface $layout_tempstore_repository, UuidInterface $uuid, EntityTypeManagerInterface $entity_type_manager) {
     $this->layoutTempstoreRepository = $layout_tempstore_repository;
+    $this->uuidGenerator = $uuid;
+    $this->entityTypeManager = $entity_type_manager;
   }
 
   /**
@@ -61,7 +85,9 @@ class AddTemplateToLibraryForm extends FormBase {
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('layout_builder.tempstore_repository')
+      $container->get('layout_builder.tempstore_repository'),
+      $container->get('uuid'),
+      $container->get('entity_type.manager')
     );
   }
 
@@ -93,6 +119,7 @@ class AddTemplateToLibraryForm extends FormBase {
       '#description' => t("Upload the section image or screenshot. <br />Allowed extensions: gif png jpg jpeg."),
       '#required' => FALSE,
       '#multiple' => FALSE,
+      '#upload_location' => 'public://',
       '#upload_validators' => [
         'file_validate_extensions' => ['gif png jpg jpeg'],
       ],
@@ -119,11 +146,13 @@ class AddTemplateToLibraryForm extends FormBase {
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $sections = $this->sectionStorage->getSections();
+    // Deep cloning sections.
+    $deep_cloned_sections = $this->deepCloneSections($sections);
     $layout_entity = $this->sectionStorage->getContextValue('entity');
 
     $entity_values = [
       'label' => $form_state->getValue('label'),
-      'layout_section' => $sections,
+      'layout_section' => $deep_cloned_sections,
       'type' => 'template',
       'entity_type' => $layout_entity->getEntityTypeId(),
       'entity_id' => $layout_entity->id(),
@@ -150,7 +179,7 @@ class AddTemplateToLibraryForm extends FormBase {
    * {@inheritdoc}
    */
   protected function successfulAjaxSubmit(array $form, FormStateInterface $form_state) {
-    return $this->rebuildAndClose($this->sectionStorage);
+    return $this->closeDialog();
   }
 
 }

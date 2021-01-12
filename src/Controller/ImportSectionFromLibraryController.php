@@ -12,7 +12,8 @@ use Drupal\layout_builder\Controller\LayoutRebuildTrait;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
-use Drupal\layout_builder\SectionComponent;
+use Drupal\section_library\DeepCloningTrait;
+use Drupal\layout_builder\Section;
 
 /**
  * Defines a controller to import a section.
@@ -24,6 +25,7 @@ class ImportSectionFromLibraryController implements ContainerInjectionInterface 
 
   use AjaxHelperTrait;
   use LayoutRebuildTrait;
+  use DeepCloningTrait;
 
   /**
    * The layout tempstore repository.
@@ -87,56 +89,27 @@ class ImportSectionFromLibraryController implements ContainerInjectionInterface 
    *   A render array.
    */
   public function build($section_library_id, SectionStorageInterface $section_storage, $delta) {
-    $allowed_types = [
-      'block_content',
-    ];
-
     $section_library_template = SectionLibraryTemplate::load($section_library_id);
     $sections = $section_library_template->get('layout_section')->getValue();
     if ($sections) {
       $reversed_sections = array_reverse($sections);
       foreach ($reversed_sections as $section) {
-        foreach ($section['section']->getComponents() as $uuid => $component) {
-          $component_array = $component->toArray();
-          $configuration = $component_array['configuration'];
+        $current_section = $section['section'];
+        $current_section_array = $current_section->toArray();
 
-          $new_component = new SectionComponent($this->uuidGenerator->generate(), $component->getRegion(), $configuration);
-          if (isset($configuration['block_revision_id'])) {
-            $entity_revision_id = $configuration['block_revision_id'];
-            $entity = $this->entityTypeManager->getStorage('block_content')->loadRevision($entity_revision_id);
-            $duplicate_entity = $entity->createDuplicate();
-            $duplicate_entity->save();
-            $entity_fields = $duplicate_entity->getFields();
-            foreach ($entity_fields as $field_key => $entity_field) {
-              $value = $entity_field->getValue();
-              if ($entity_field->getName() != 'type' && isset($value[0]['target_id'])) {
-                $target_entity = $entity_field->getDataDefinition()->getTargetEntityTypeId();
-                if (in_array($target_entity, $allowed_types)) {
-                  // Create a duplicate entity reference and replace
-                  // the current target ids with the new entites.
-                  $new_referenced_target_ids = [];
-                  foreach ($entity_field->referencedEntities() as $entity_reference) {
-                    $new_entity_reference = $entity_reference->createDuplicate();
-                    $new_entity_reference->save();
-                    $new_referenced_target_ids[] = ['target_id' => $new_entity_reference->id()];
-                  }
-                  $duplicate_entity->set($field_key, $new_referenced_target_ids);
-                  $duplicate_entity->save();
-                }
-              }
-            }
-            // Remove old component.
-            $section['section']->removeComponent($uuid);
-            // Insert the new component.
-            $new_revision_id = $duplicate_entity->getRevisionId();
-            $configuration['block_revision_id'] = $new_revision_id;
-            $new_component->setConfiguration($configuration);
+        // Clone section.
+        $cloned_section = new Section(
+          $current_section->getLayoutId(),
+          $current_section->getLayoutSettings(),
+          $current_section->getComponents(),
+          $current_section_array['third_party_settings']
+        );
 
-            $section['section']->insertComponent(0, $new_component);
-          }
-        }
+        // Replace section components with new instances.
+        $deep_cloned_section = $this->cloneAndReplaceSectionComponents($cloned_section);
+
         // Create a new section.
-        $section_storage->insertSection($delta, $section['section']);
+        $section_storage->insertSection($delta, $deep_cloned_section);
       }
     }
 
