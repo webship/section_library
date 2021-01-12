@@ -75,7 +75,6 @@ trait DeepCloningTrait {
    *   The modefied section object.
    */
   protected function cloneAndReplaceSectionComponents($section) {
-    $delta = 0;
     foreach ($section->getComponents() as $uuid => $component) {
       $component_array = $component->toArray();
       $configuration = $component_array['configuration'];
@@ -95,15 +94,15 @@ trait DeepCloningTrait {
         $new_revision_id = $duplicate_entity->getRevisionId();
         $configuration['block_revision_id'] = $new_revision_id;
       }
-      // Remove old component.
-      $section->removeComponent($uuid);
 
       $new_component->setWeight($component->getWeight());
       $new_component->setConfiguration($configuration);
 
-      // Insert the new component.
-      $section->insertComponent($delta, $new_component);
-      $delta++;
+      // Insert the new component after the old one.
+      $section->insertAfterComponent($uuid, $new_component);
+
+      // Then remove old component.
+      $section->removeComponent($uuid);
     }
 
     return $section;
