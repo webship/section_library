@@ -2,6 +2,7 @@
 
 namespace Drupal\section_library;
 
+use Drupal\layout_builder\Plugin\Block\InlineBlock;
 use Drupal\layout_builder\SectionComponent;
 use Drupal\layout_builder\Section;
 
@@ -81,18 +82,31 @@ trait DeepCloningTrait {
       $additional = $component_array['additional'];
       // Create a new component.
       $new_component = new SectionComponent($this->uuidGenerator->generate(), $component->getRegion(), $configuration, $additional);
-      // If the component is a single-use do a deep cloning of it.
-      if (isset($configuration['block_revision_id'])) {
-        $entity_revision_id = $configuration['block_revision_id'];
-        $entity = $this->entityTypeManager->getStorage('block_content')->loadRevision($entity_revision_id);
-        // Create a duplicate entity for the first level.
-        $duplicate_entity = $entity->createDuplicate();
-        $duplicate_entity->save();
-        // Duplicate referenced entities of allowed types.
-        $this->cloneReferencedEntities($duplicate_entity);
-        // Update the configuration with the new entity block_revision_id.
-        $new_revision_id = $duplicate_entity->getRevisionId();
-        $configuration['block_revision_id'] = $new_revision_id;
+
+      $plugin_block = $component->getPlugin();
+      if ($plugin_block instanceof InlineBlock) {
+        try {
+          // Now fetch the entity itself for recursive cloning. We have to use
+          // reflection for this as it's a protected method.
+          $reflectionMethod = new \ReflectionMethod($plugin_block, 'getEntity');
+          $reflectionMethod->setAccessible(TRUE);
+          $entity = $reflectionMethod->invoke($plugin_block);
+          $duplicate_entity = $entity->createDuplicate();
+          $configuration['block_uuid'] = NULL;
+          $configuration['block_revision_id'] = NULL;
+          $configuration['block_serialized'] = NULL;
+          // Duplicate referenced entities of allowed types.
+          $this->cloneReferencedEntities($duplicate_entity);
+          // Save as serialized. Otherwise we get into trouble with MediaLibrary access checks
+          // if it already has an ID but the layout hasn't been saved yet, meaning it
+          // hasn't been added to the usage table yet. Moreover, if it has an ID when
+          // we save the layout then it also seems to not want to add it to the usage
+          // table. No clue why. But keeping it serialized seems to fix everything,
+          // and is how core itself handles adding new blocks as well.
+          $configuration['block_serialized'] = serialize($duplicate_entity);
+        } catch (\ReflectionException $e) {
+          watchdog_exception('section_library', $e);
+        }
       }
 
       $new_component->setWeight($component->getWeight());
@@ -133,7 +147,6 @@ trait DeepCloningTrait {
             $this->cloneReferencedEntities($new_entity_reference);
           }
           $entity->set($field_key, $new_referenced_target_ids);
-          $entity->save();
         }
       }
     }
