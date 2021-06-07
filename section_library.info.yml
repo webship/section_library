@@ -6,3 +6,4 @@ core_version_requirement: ^8 || ^9
 package: 'Layout Builder'
 dependencies:
   - drupal:layout_builder
+  - drupal:options
