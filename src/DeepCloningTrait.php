@@ -20,6 +20,7 @@ trait DeepCloningTrait {
   protected function getAllowedTypes() {
     return [
       'block_content',
+      'paragraph',
     ];
   }
 
@@ -104,7 +105,8 @@ trait DeepCloningTrait {
           // table. No clue why. But keeping it serialized seems to fix everything,
           // and is how core itself handles adding new blocks as well.
           $configuration['block_serialized'] = serialize($duplicate_entity);
-        } catch (\ReflectionException $e) {
+        }
+        catch (\ReflectionException $e) {
           watchdog_exception('section_library', $e);
         }
       }
@@ -140,6 +142,13 @@ trait DeepCloningTrait {
           // the current target ids with the new entites.
           $new_referenced_target_ids = [];
           foreach ($entity_field->referencedEntities() as $entity_reference) {
+            // Skip any items not included in getAllowedTypes method.
+            // such as User, Media, Taxonomy term, Node...etc.
+            if (!in_array($entity_reference->getEntityTypeId(), $this->getAllowedTypes())) {
+              $new_referenced_target_ids[] = ['target_id' => $entity_reference->id()];
+              continue;
+            }
+
             $new_entity_reference = $entity_reference->createDuplicate();
             $new_entity_reference->save();
             $new_referenced_target_ids[] = ['target_id' => $new_entity_reference->id()];
