@@ -1,16 +1,14 @@
-administer Section library templates:
-  title: 'Administer Section library templates'
-  description: 'Allow to access the administration form to configure Section library templates.'
-  restrict access: true
+import template from section library:
+  title: 'Import template from Section library'
 
-view Section library templates:
+view section library templates:
   title: 'View Section library templates'
 
-add Section library templates:
+add section library templates:
   title: 'Create new Section library templates'
 
-edit Section library templates:
+edit section library templates:
   title: 'Edit Section library templates'
 
-delete Section library templates:
+delete section library templates:
   title: 'Delete Section library templates'

@@ -21,17 +21,14 @@ class SectionLibraryTemplateAccessControlHandler extends EntityAccessControlHand
     /** @var \Drupal\section_library\Entity\SectionLibraryTemplateInterface $entity */
 
     switch ($operation) {
-
       case 'view':
-        return AccessResult::allowedIfHasPermission($account, 'view Section library templates');
+        return AccessResult::allowedIfHasPermission($account, 'view section library templates');
 
       case 'update':
-
-        return AccessResult::allowedIfHasPermission($account, 'edit Section library templates');
+        return AccessResult::allowedIfHasPermission($account, 'edit section library templates');
 
       case 'delete':
-
-        return AccessResult::allowedIfHasPermission($account, 'delete Section library templates');
+        return AccessResult::allowedIfHasPermission($account, 'delete section library templates');
     }
 
     // Unknown operation, no opinion.

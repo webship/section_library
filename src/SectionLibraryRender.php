@@ -62,18 +62,20 @@ class SectionLibraryRender implements TrustedCallbackInterface {
             unset($url_options['attributes']['data-dialog-renderer']);
           }
 
+          $choose_template_from_library_url = Url::fromRoute(
+            'section_library.choose_template_from_library',
+            [
+              'section_storage_type' => $params['section_storage_type'],
+              'section_storage' => $params['section_storage'],
+              'delta' => $params['delta'],
+            ],
+            $url_options,
+          );
           $sections[$key]['choose_template_from_library'] = [
             '#type' => 'link',
             '#title' => t('Import from Library'),
-            '#url' => Url::fromRoute(
-              'section_library.choose_template_from_library',
-              [
-                'section_storage_type' => $params['section_storage_type'],
-                'section_storage' => $params['section_storage'],
-                'delta' => $params['delta'],
-              ],
-              $url_options,
-            ),
+            '#url' => $choose_template_from_library_url,
+            '#access' => $choose_template_from_library_url->access(),
           ];
         }
         // Add save to library link to the built section.
@@ -81,40 +83,8 @@ class SectionLibraryRender implements TrustedCallbackInterface {
           $params = $section['configure']['#url']->getRouteParameters();
           // Pop the last item to add the link before it.
           $last_item_section = array_pop($sections[$key]);
-          $sections[$key]['add_to_library'] = [
-            '#type' => 'link',
-            '#title' => t('Add to Library'),
-            '#url' => Url::fromRoute(
-              'section_library.add_section_to_library',
-              [
-                'section_storage_type' => $params['section_storage_type'],
-                'section_storage' => $params['section_storage'],
-                'delta' => $params['delta'],
-              ],
-              [
-                'attributes' => [
-                  'class' => [
-                    'use-ajax',
-                    'layout-builder__link',
-                    'layout-builder__link--add-section-to-library',
-                  ],
-                  'data-dialog-type' => 'dialog',
-                  'data-dialog-renderer' => 'off_canvas',
-                ],
-              ]
-            ),
-          ];
-          // Push the last item again.
-          array_push($sections[$key], $last_item_section);
-        }
-      }
-
-      $add_to_template = [
-        'add_template_to_library' => [
-          '#type' => 'link',
-          '#title' => t('Add this template to library'),
-          '#url' => Url::fromRoute(
-            'section_library.add_template_to_library',
+          $add_to_library_url = Url::fromRoute(
+            'section_library.add_section_to_library',
             [
               'section_storage_type' => $params['section_storage_type'],
               'section_storage' => $params['section_storage'],
@@ -125,13 +95,49 @@ class SectionLibraryRender implements TrustedCallbackInterface {
                 'class' => [
                   'use-ajax',
                   'layout-builder__link',
-                  'layout-builder__link--add-template-to-library',
+                  'layout-builder__link--add-section-to-library',
                 ],
                 'data-dialog-type' => 'dialog',
                 'data-dialog-renderer' => 'off_canvas',
               ],
             ]
-          ),
+          );
+          $sections[$key]['add_to_library'] = [
+            '#type' => 'link',
+            '#title' => t('Add to Library'),
+            '#url' => $add_to_library_url,
+            '#access' => $add_to_library_url->access(),
+          ];
+          // Push the last item again.
+          array_push($sections[$key], $last_item_section);
+        }
+      }
+
+      $add_template_to_library_url = Url::fromRoute(
+        'section_library.add_template_to_library',
+        [
+          'section_storage_type' => $params['section_storage_type'],
+          'section_storage' => $params['section_storage'],
+          'delta' => $params['delta'],
+        ],
+        [
+          'attributes' => [
+            'class' => [
+              'use-ajax',
+              'layout-builder__link',
+              'layout-builder__link--add-template-to-library',
+            ],
+            'data-dialog-type' => 'dialog',
+            'data-dialog-renderer' => 'off_canvas',
+          ],
+        ]
+      );
+      $add_to_template = [
+        'add_template_to_library' => [
+          '#type' => 'link',
+          '#title' => t('Add this template to library'),
+          '#url' => $add_template_to_library_url,
+          '#access' => $add_template_to_library_url->access(),
         ],
       ];
       array_unshift($sections, $add_to_template);
