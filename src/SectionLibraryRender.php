@@ -69,7 +69,7 @@ class SectionLibraryRender implements TrustedCallbackInterface {
               'section_storage' => $params['section_storage'],
               'delta' => $params['delta'],
             ],
-            $url_options,
+            $url_options
           );
           $sections[$key]['choose_template_from_library'] = [
             '#type' => 'link',

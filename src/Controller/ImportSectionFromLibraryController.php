@@ -71,7 +71,7 @@ class ImportSectionFromLibraryController implements ContainerInjectionInterface 
     return new static(
       $container->get('layout_builder.tempstore_repository'),
       $container->get('uuid'),
-      $container->get('entity_type.manager'),
+      $container->get('entity_type.manager')
     );
   }
 

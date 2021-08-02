@@ -58,7 +58,7 @@ trait DeepCloningTrait {
       $section->getLayoutId(),
       $section->getLayoutSettings(),
       $section->getComponents(),
-      $section_array['third_party_settings'],
+      $section_array['third_party_settings']
     );
 
     // Replace section components with new instances.
