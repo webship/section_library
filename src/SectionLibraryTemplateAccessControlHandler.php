@@ -39,7 +39,7 @@ class SectionLibraryTemplateAccessControlHandler extends EntityAccessControlHand
    * {@inheritdoc}
    */
   protected function checkCreateAccess(AccountInterface $account, array $context, $entity_bundle = NULL) {
-    return AccessResult::allowedIfHasPermission($account, 'add Section library template entities');
+    return AccessResult::allowedIfHasPermission($account, 'add section library templates');
   }
 
 }
