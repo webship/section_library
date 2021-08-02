@@ -15,12 +15,11 @@ trait DeepCloningTrait {
    * The allowed types for deep cloning.
    *
    * @return array
-   *   Array of enitiy types ids.
+   *   Array of entity types ids.
    */
   protected function getAllowedTypes() {
     return [
       'block_content',
-      'paragraph',
     ];
   }
 
@@ -125,7 +124,7 @@ trait DeepCloningTrait {
   }
 
   /**
-   * Clone entity refernced entites.
+   * Clone entity referenced entities.
    *
    * @param object $entity
    *   The entity we like duplicate its ReferencedEntities.
@@ -134,14 +133,22 @@ trait DeepCloningTrait {
     $entity_fields = $entity->getFields();
     foreach ($entity_fields as $field_key => $entity_field) {
       $value = $entity_field->getValue();
+      // Handle Paragraph as special case as it does not support
+      // referencedEntities(), check issue #3089724, also it uses revsion id.
+      $this->cloneReferencedParagraphsEntities($field_key, $entity_field, $entity);
+
+      // The general rule for any entity.
       if ($entity_field->getName() != 'type' && isset($value[0]['target_id'])) {
         $target_entity = $entity_field->getDataDefinition()->getTargetEntityTypeId();
-
-        if (in_array($target_entity, $this->getAllowedTypes())) {
-          // Create a duplicate entity reference and replace
-          // the current target ids with the new entites.
-          $new_referenced_target_ids = [];
-          foreach ($entity_field->referencedEntities() as $entity_reference) {
+        $referenced_entities = $entity_field->referencedEntities();
+        // Create a duplicate entity reference and replace
+        // the current target ids with the new entites.
+        $new_referenced_target_ids = [];
+        if (
+          in_array($target_entity, $this->getAllowedTypes())
+          && (!$entity_field->getSetting('target_type')
+          || $entity_field->getSetting('target_type') != 'paragraph')) {
+          foreach ($referenced_entities as $entity_reference) {
             // Skip any items not included in getAllowedTypes method.
             // such as User, Media, Taxonomy term, Node...etc.
             if (!in_array($entity_reference->getEntityTypeId(), $this->getAllowedTypes())) {
@@ -155,9 +162,56 @@ trait DeepCloningTrait {
             // Recursive call.
             $this->cloneReferencedEntities($new_entity_reference);
           }
+        }
+
+        if (!empty($new_referenced_target_ids)) {
           $entity->set($field_key, $new_referenced_target_ids);
         }
       }
+
+    }
+  }
+
+  /**
+   * Clone paragraphs referenced entities.
+   *
+   * @param string $field_key
+   *   The field machine name.
+   * @param object $entity_field
+   *   The field object.
+   * @param object $entity
+   *   The original entity object.
+   */
+  protected function cloneReferencedParagraphsEntities($field_key, $entity_field, &$entity) {
+    $value = $entity_field->getValue();
+    $new_value = [];
+    // Paragraphs Classic, EXPERIMENTAL and IEF - simple form mode structure.
+    if (isset($value[0]['entity'])) {
+      foreach ($value as $key => $item) {
+        if ($item['entity']) {
+          $new_paragraph_entity = $item['entity']->createDuplicate();
+          $new_value[$key]['entity'] = $new_paragraph_entity;
+        }
+      }
+    }
+    // IEF - complex form mode structure.
+    elseif (
+      $entity_field->getName() != 'type'
+      && isset($value[0]['target_id'])
+      && $entity_field->getSetting('target_type') == 'paragraph'
+    ) {
+      foreach ($value as $key => $item) {
+        $paragraph = \Drupal::entityTypeManager()->getStorage('paragraph')->load($value[$key]['target_id']);
+        $new_paragraph = $paragraph->createDuplicate();
+        // It's important to save the entity in the IEF - complex case.
+        $new_paragraph->save();
+        $new_value[$key]['target_id'] = $new_paragraph->id();
+        $new_value[$key]['target_revision_id'] = $new_paragraph->getRevisionId();
+      }
+    }
+
+    if (!empty($new_value)) {
+      $entity->set($field_key, $new_value);
     }
   }
 

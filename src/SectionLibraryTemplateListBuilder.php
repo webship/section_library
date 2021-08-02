@@ -26,7 +26,7 @@ class SectionLibraryTemplateListBuilder extends EntityListBuilder {
    * {@inheritdoc}
    */
   public function buildRow(EntityInterface $entity) {
-    /* @var \Drupal\section_library\Entity\SectionLibraryTemplate $entity */
+    /** @var \Drupal\section_library\Entity\SectionLibraryTemplate $entity */
     $row['id'] = $entity->id();
     $row['name'] = Link::createFromRoute(
       $entity->label(),
