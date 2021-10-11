@@ -12,3 +12,6 @@ edit section library templates:
 
 delete section library templates:
   title: 'Delete Section library templates'
+
+administer Section library template entities:
+  title: 'Administer Section library template entities'
