@@ -34,7 +34,7 @@ use Drupal\Core\Field\FieldStorageDefinitionInterface;
  *   },
  *   base_table = "section_library_template",
  *   translatable = FALSE,
- *   admin_permission = "administer Section library template entities",
+ *   admin_permission = "administer section library template entities",
  *   entity_keys = {
  *     "id" = "id",
  *     "label" = "label",
