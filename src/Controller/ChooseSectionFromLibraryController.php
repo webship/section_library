@@ -5,6 +5,7 @@ namespace Drupal\section_library\Controller;
 use Drupal\Core\Ajax\AjaxHelperTrait;
 use Drupal\Core\DependencyInjection\ContainerInjectionInterface;
 use Drupal\Core\Entity\EntityTypeManagerInterface;
+use Drupal\Core\Extension\ExtensionList;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\layout_builder\Context\LayoutBuilderContextTrait;
@@ -36,13 +37,21 @@ class ChooseSectionFromLibraryController implements ContainerInjectionInterface 
   protected $entityTypeManager;
 
   /**
+   * The extension list module service.
+   *
+   * @var \Drupal\Core\Extension\ExtensionList
+   */
+  protected $extensionListModule;
+
+  /**
    * ChooseSectionFromLibraryController constructor.
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
    */
-  public function __construct(EntityTypeManagerInterface $entity_type_manager) {
+  public function __construct(EntityTypeManagerInterface $entity_type_manager, ExtensionList $extension_list_module) {
     $this->entityTypeManager = $entity_type_manager;
+    $this->extensionListModule = $extension_list_module;
   }
 
   /**
@@ -50,7 +59,8 @@ class ChooseSectionFromLibraryController implements ContainerInjectionInterface 
    */
   public static function create(ContainerInterface $container) {
     return new static(
-      $container->get('entity_type.manager')
+      $container->get('entity_type.manager'),
+      $container->get('extension.list.module')
     );
   }
 
@@ -103,7 +113,7 @@ class ChooseSectionFromLibraryController implements ContainerInjectionInterface 
       $attributes = $this->getAjaxAttributes();
       $attributes['class'][] = 'js-layout-builder-section-library-link';
       // Default library image.
-      $img_path = drupal_get_path('module', 'section_library') . '/images/default.png';
+      $img_path = $this->extensionListModule->getPath('section_library') . '/images/default.png';
       if ($fid = $section->get('image')->target_id) {
         $file = File::load($fid);
         $img_path = $file->getFileUri();
