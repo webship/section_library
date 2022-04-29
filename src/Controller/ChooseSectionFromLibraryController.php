@@ -14,7 +14,6 @@ use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\section_library\Entity\SectionLibraryTemplate;
 use Drupal\Core\Render\Markup;
-use Drupal\file\Entity\File;
 
 /**
  * Defines a controller to choose a section from library.
@@ -48,6 +47,8 @@ class ChooseSectionFromLibraryController implements ContainerInjectionInterface 
    *
    * @param \Drupal\Core\Entity\EntityTypeManagerInterface $entity_type_manager
    *   The entity type manager.
+   * @param \Drupal\Core\Extension\ExtensionList $extension_list_module
+   *   The extension list module service.
    */
   public function __construct(EntityTypeManagerInterface $entity_type_manager, ExtensionList $extension_list_module) {
     $this->entityTypeManager = $entity_type_manager;
@@ -115,7 +116,7 @@ class ChooseSectionFromLibraryController implements ContainerInjectionInterface 
       // Default library image.
       $img_path = $this->extensionListModule->getPath('section_library') . '/images/default.png';
       if ($fid = $section->get('image')->target_id) {
-        $file = File::load($fid);
+        $file = $this->entityTypeManager->getStorage('file')->load($fid);
         $img_path = $file->getFileUri();
       }
 

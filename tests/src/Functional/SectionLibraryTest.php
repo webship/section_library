@@ -17,6 +17,14 @@ class SectionLibraryTest extends BrowserTestBase {
   protected $defaultTheme = 'stable';
 
   /**
+   * An admin user with permission to use the Section Library.
+   *
+   * @var \Drupal\user\UserInterface
+   */
+  protected $adminUser;
+
+
+  /**
    * {@inheritdoc}
    */
   protected static $modules = [
@@ -31,21 +39,25 @@ class SectionLibraryTest extends BrowserTestBase {
    */
   protected function setUp(): void {
     parent::setUp();
-    // Set up the test here.
+
+    $this->adminUser = $this->drupalCreateUser([
+      'administer site configuration',
+      'access administration pages',
+      'import template from section library',
+      'view section library templates',
+      'add section library templates',
+      'edit section library templates',
+      'delete section library templates',
+      'administer section library template entities',
+    ]);
+
   }
 
   /**
    * Test callback.
    */
   public function testInstall(): void {
-    $admin_user = $this->drupalCreateUser([
-      'administer site configuration',
-      'access administration pages',
-      'administer section library template entities',
-      'view section library templates',
-      'add section library templates',
-    ]);
-    $this->drupalLogin($admin_user);
+    $this->drupalLogin($this->adminUser);
     $this->drupalGet('/admin/content/section-library');
     $this->assertSession()->pageTextContains('There are no section library template entities yet.');
   }

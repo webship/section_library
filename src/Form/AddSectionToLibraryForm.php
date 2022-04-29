@@ -10,7 +10,6 @@ use Drupal\layout_builder\LayoutTempstoreRepositoryInterface;
 use Drupal\layout_builder\SectionStorageInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Drupal\section_library\Entity\SectionLibraryTemplate;
-use Drupal\file\Entity\File;
 use Drupal\section_library\DeepCloningTrait;
 use Drupal\section_library\SectionLibraryRebuildTrait;
 use Drupal\Component\Uuid\UuidInterface;
@@ -115,8 +114,8 @@ class AddSectionToLibraryForm extends FormBase {
 
     $form['image'] = [
       '#type' => 'managed_file',
-      '#title' => t('Image'),
-      '#description' => t("Upload the section image or screenshot. <br />Allowed extensions: gif png jpg jpeg."),
+      '#title' => $this->t('Image'),
+      '#description' => $this->t("Upload the section image or screenshot. <br />Allowed extensions: gif png jpg jpeg."),
       '#required' => FALSE,
       '#multiple' => FALSE,
       '#upload_location' => 'public://',
@@ -160,7 +159,7 @@ class AddSectionToLibraryForm extends FormBase {
     $fid = $form_state->getValue(['image', 0]);
 
     if (!empty($fid)) {
-      $file = File::load($fid);
+      $file = $this->entityTypeManager->getStorage('file')->load($fid);
       $file->setPermanent();
       $file->save();
 

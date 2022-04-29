@@ -97,11 +97,13 @@ trait DeepCloningTrait {
           $configuration['block_serialized'] = NULL;
           // Duplicate referenced entities of allowed types.
           $this->cloneReferencedEntities($duplicate_entity);
-          // Save as serialized. Otherwise we get into trouble with MediaLibrary access checks
-          // if it already has an ID but the layout hasn't been saved yet, meaning it
-          // hasn't been added to the usage table yet. Moreover, if it has an ID when
-          // we save the layout then it also seems to not want to add it to the usage
-          // table. No clue why. But keeping it serialized seems to fix everything,
+          // Save as serialized. Otherwise we get into trouble with MediaLibrary
+          // access checks.
+          // if it already has an ID but the layout hasn't been saved yet,
+          // meaning it hasn't been added to the usage table yet. Moreover,
+          // if it has an ID when we save the layout then it also seems to
+          // not want to add it to the usage table.
+          // No clue why. But keeping it serialized seems to fix everything,
           // and is how core itself handles adding new blocks as well.
           $configuration['block_serialized'] = serialize($duplicate_entity);
         }
